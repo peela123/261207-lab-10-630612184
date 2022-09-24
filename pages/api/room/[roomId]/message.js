@@ -4,47 +4,40 @@ import { v4 as uuidv4 } from "uuid";
 export default function roomIdMessageRoute(req, res) {
   const rooms = readDB();
   if (req.method === "GET") {
-    //get all room id
     const id = req.query.roomId;
-    //get room index
-    const roomIdx = rooms.findIndex((x) => {
-      x.roomId === id;
-    });
-    //check if room exist or not
+    const roomIdx = rooms.findIndex((x) => x.roomId === id);
     if (roomIdx === -1) {
       return res.status(404).json({ ok: false, message: "Invalid room id" });
     }
-
-    return res.json({ ok: true, messages: rooms[roomIdx].messages });
-  } else if (req.method === "POST") {
-    const rooms = readDB();
-    const id = req.query.roomId;
-
-    //read request body
-    const text = req.body.text;
-
-    //create new id
-    const newId = uuidv4();
-
-    const roomIdx = rooms.findIndex((x) => {
-      x.roomId === id;
+    return res.json({
+      ok: true,
+      messages: rooms[roomIdx].messages,
     });
-
-    //case1 roomid do not exist
-    if (roomIdx === -1)
+  } 
+  else if (req.method === "POST") {
+    const id = req.query.roomId;
+    const roomIdx = rooms.findIndex((x) => x.roomId === id);
+    //room id not exist
+    if (roomIdx === -1) {
       return res.status(404).json({ ok: false, message: "Invalid room id" });
-    //case2 invalid body
-    if (typeof text !== "string")
+    }
+    //text wrong
+    const text = req.body.text;
+    if (typeof text !== "string" || text.length === 0) {
       return res.status(400).json({ ok: false, message: "Invalid text input" });
+    }
 
-    //case3 valid both
-    const newmessage = {
+   
+    const newId = uuidv4();
+    const message = {
       messageId: newId,
       text: text,
     };
-    rooms[roomIdx].messages.push(newmessage);
+    rooms[roomIdx].messages.push(message);
     writeDB(rooms);
-
-    return res.json({ oK: true, newmessage });
+    return res.json({
+      ok: true,
+      message: message,
+    });
   }
 }
