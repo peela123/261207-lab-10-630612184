@@ -29,15 +29,16 @@ export default function roomIdMessageRoute(req, res) {
 
    
     const newId = uuidv4();
-    const message = {
-      messageId: newId,
-      text: text,
-    };
-    rooms[roomIdx].messages.push(message);
+    const newMessage = {
+      messageId:newId,
+      text:text
+    }
+   
+    rooms[roomIdx].messages.push(newMessage);
     writeDB(rooms);
     return res.json({
       ok: true,
-      message: message,
+      message: newMessage,
     });
   }
 }
