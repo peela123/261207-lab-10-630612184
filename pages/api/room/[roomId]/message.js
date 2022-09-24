@@ -13,8 +13,8 @@ export default function roomIdMessageRoute(req, res) {
     });
     //check if room exist or not
     if (roomindex === -1)
-      return res.status(404).json({ ok: "false", message: "Invalid room id" });
-    return res.json({ ok: "true", messages: rooms[roomindex].messages });
+      return res.status(404).json({ ok: false, message: "Invalid room id" });
+    return res.json({ ok: true, messages: rooms[roomindex].messages });
   } else if (req.method === "POST") { 
     const rooms = readDB();
     const roomid = req.query.roomId;
@@ -31,14 +31,14 @@ export default function roomIdMessageRoute(req, res) {
 
     //case1 roomid do not exist
     if (roomindex === -1)
-      return res.json({ ok: "false", message: "Invalid room id" });
+      return res.status(404).json({ ok: false, message: "Invalid room id" });
     //case2 invalid body
     if (typeof text !== "string")
       return res
         .status(400)
-        .json({ ok: "false", message: "Invalid text input" });
+        .json({ ok: false, message: "Invalid text input" });
 
-    //case3 valid
+    //case3 valid both
     const newmessage = {
       messageId: newId,
       text: text
@@ -48,7 +48,7 @@ export default function roomIdMessageRoute(req, res) {
 
     
 
-    return res.json({oK:"true",message:newmessage})
+    return res.json({oK:true,message:newmessage})
 
   }
 }
