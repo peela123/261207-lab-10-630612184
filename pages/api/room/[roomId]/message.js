@@ -48,7 +48,7 @@ export default function roomIdMessageRoute(req, res) {
 
     
 
-    return res.json({oK:true,message:newmessage})
+    return res.json({oK:true,newmessage})
 
   }
 }
