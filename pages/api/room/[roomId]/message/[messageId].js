@@ -4,35 +4,24 @@ export default function roomIdMessageIdRoute(req, res) {
   //read value from URL
   const roomId = req.query.roomId;
   const messageId = req.query.messageId;
- 
- 
-  
-  if(req.method === "DELETE")
-  {
-    const rooms = readDB()
-    const roomindex = rooms.findIndex((x) => {x.roomId === roomId})  
-    const messageindex = rooms[roomindex].messages.findIndex((x) => {x.messageId === messageId})
-    
-    
 
-     //case2 roomId dose not exist
-     if(roomindex === -1) return res.status(404).json({ok:false,message:"Invalid room id"})
+  if (req.method === "DELETE") {
+    const rooms = readDB();
+    const roomIdx = rooms.findIndex((x) => x.roomId === roomId);
+    //the room does not exist
+    if (roomIdx === -1)
+      return res.status(404).json({ ok: false, message: "Invalid room id" });
 
+    const messageIdx = rooms[roomIdx].messages.findIndex(
+      (x) => x.messageId === messageId
+    );
+    //the message does not exist
+    if (messageIdx === -1)
+      return res.status(404).json({ ok: false, message: "Invalid message id" });
 
-     //case3 messsage dose not exist
-     if(messageindex === -1) return res.status(404).json({ok:false,message:"Invalid message id"})
-    
-     
-
-    //case1 roomId and messageId valid
-    rooms[roomindex].messages.splice(messageindex,1)
-    writeDB(rooms)
-    return res.json({ok:true})
-    
-
-   
-    
-
-     
+    //valid request
+    rooms[roomIdx].messages.splice(messageIdx, 1);
+    writeDB(rooms);
+    return res.json({ ok: true });
   }
 }
