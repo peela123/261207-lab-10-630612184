@@ -13,12 +13,7 @@ export default function roomRoute(req, res) {
       
     })
   }
-  // const result = rooms.map((x) => {
-  //   roomId = x.roomId,
-  //   roomName = x.roomName
   
-  // })
 
-
-  return res.status(200).json({ok:"true",rooms:result})
+  return res.json({ok:"true",rooms:result})
 }
